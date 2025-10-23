@@ -70,13 +70,13 @@ const EnhancementSimulator: React.FC = () => {
 	};
 
 	return (
-		<Card className="bg-background relative w-[800px] h-[500px] mx-auto bg-card/70 border border-primary rounded-xl shadow-lg p-5 flex flex-col gap-5">
+		<Card className="bg-background w-full max-w-full md:w-[800px] md:h-[500px] aspect-video mx-auto md:bg-card/70 md:border md:border-primary md:rounded-xl md:shadow-lg p-5 flex flex-col gap-5">
 			<CardHeader className="p-0">
 				<CardTitle className="text-center text-primary font-bold text-2xl">
 					Amplification
 				</CardTitle>
 			</CardHeader>
-			<CardContent className="text-sm self-center">
+			<CardContent className="text-sm self-center mb-16 md:mb-0">
 				<h3>Attempts: {attemptCounter}</h3>
 				<h3>Total Stats: {stats.reduce((sum, stat) => sum + stat.value, 0)}</h3>
 			</CardContent>
@@ -99,7 +99,9 @@ const EnhancementSimulator: React.FC = () => {
 									/>
 								))}
 							</div>
-							<div className="text-primary text-lg font-bold mt-2">+{stat.value}</div>
+							<div className="text-primary text-lg font-bold mt-2 md:mt-0">
+								+{stat.value}
+							</div>
 							<div className="w-10 h-10 rounded-full bg-card flex items-center justify-center border border-primary mt-2">
 								{stat.icon}
 							</div>
@@ -108,7 +110,7 @@ const EnhancementSimulator: React.FC = () => {
 				</div>
 
 				<div className="flex self-center mt-4">
-					<div className="flex space-x-4">
+					<div className="flex flex-col space-y-2 md:flex-row md:space-x-4 md:space-y-0">
 						<Button onClick={handleEnhance} className="enhancement-button">
 							Amplify
 						</Button>
