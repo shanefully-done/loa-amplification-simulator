@@ -1,4 +1,4 @@
-import { StatsArray } from './types';
+import { StatsArray } from "./types";
 
 const probabilityTable: Record<number, number[]> = {
 	0: [0.2014, 0.2986, 0.2014, 0.1389, 0.1181, 0.047], // for stat value 0
@@ -20,13 +20,13 @@ const probabilityTable: Record<number, number[]> = {
  * @returns The nearest tier (0, 5, or 10).
  */
 function getNearestStatTier(statValue: number): 0 | 5 | 10 {
-  if (statValue <= 2.5) {
-    return 0;
-  } else if (statValue <= 7.5) {
-    return 5;
-  } else {
-    return 10;
-  }
+	if (statValue <= 2.5) {
+		return 0;
+	} else if (statValue <= 7.5) {
+		return 5;
+	} else {
+		return 10;
+	}
 }
 
 /**
@@ -35,15 +35,15 @@ function getNearestStatTier(statValue: number): 0 | 5 | 10 {
  * @returns A random integer between 0 and 5.
  */
 function getRandomRollValue(probabilities: number[]): number {
-  const rand = Math.random();
-  let cumulativeProbability = 0;
-  for (let i = 0; i < probabilities.length; i++) {
-    cumulativeProbability += probabilities[i];
-    if (rand < cumulativeProbability) {
-      return i;
-    }
-  }
-  return probabilities.length - 1; // Fallback, should not be reached with valid probabilities
+	const rand = Math.random();
+	let cumulativeProbability = 0;
+	for (let i = 0; i < probabilities.length; i++) {
+		cumulativeProbability += probabilities[i];
+		if (rand < cumulativeProbability) {
+			return i;
+		}
+	}
+	return probabilities.length - 1; // Fallback, should not be reached with valid probabilities
 }
 
 /**
@@ -52,15 +52,15 @@ function getRandomRollValue(probabilities: number[]): number {
  * @returns An array of generated roll values, one for each stat.
  */
 export function generateRoll(currentStats: StatsArray): number[] {
-  const rollValues: number[] = [];
+	const rollValues: number[] = [];
 
-  for (const stat of currentStats) {
-    const tier = getNearestStatTier(stat.value);
-    const probabilities = probabilityTable[tier];
-    rollValues.push(getRandomRollValue(probabilities));
-  }
+	for (const stat of currentStats) {
+		const tier = getNearestStatTier(stat.value);
+		const probabilities = probabilityTable[tier];
+		rollValues.push(getRandomRollValue(probabilities));
+	}
 
-  return rollValues;
+	return rollValues;
 }
 
 /**
@@ -69,11 +69,14 @@ export function generateRoll(currentStats: StatsArray): number[] {
  * @param rollValues An array of roll values to apply to each stat.
  * @returns A new StatsArray with the updated stat values.
  */
-export function updateStats(currentStats: StatsArray, rollValues: number[]): StatsArray {
-  return currentStats.map((stat, index) => {
-    const newStatValue = Math.min(10, stat.value + rollValues[index]);
-    return { ...stat, value: newStatValue };
-  });
+export function updateStats(
+	currentStats: StatsArray,
+	rollValues: number[]
+): StatsArray {
+	return currentStats.map((stat, index) => {
+		const newStatValue = Math.min(10, stat.value + rollValues[index]);
+		return { ...stat, value: newStatValue };
+	});
 }
 
 /**
@@ -82,7 +85,7 @@ export function updateStats(currentStats: StatsArray, rollValues: number[]): Sta
  * @returns A new StatsArray with all stat values reset to 0.
  */
 export function resetStats(currentStats: StatsArray): StatsArray {
-  return currentStats.map(stat => ({ ...stat, value: 0 }));
+	return currentStats.map((stat) => ({ ...stat, value: 0 }));
 }
 
 /**
@@ -90,19 +93,23 @@ export function resetStats(currentStats: StatsArray): StatsArray {
  * @param initialStats The initial array of stat objects.
  * @returns An object containing the updated stats and the cycle's roll history.
  */
-export function simulateCycle(initialStats: StatsArray): { updatedStats: StatsArray; cycleRollHistory: number[][] } {
-  let currentStats = [...initialStats];
-  const cycleRollHistory: number[][] = initialStats.map(() => []); // Initialize with empty arrays for each stat
+export function simulateCycle(initialStats: StatsArray): {
+	updatedStats: StatsArray;
+	cycleRollHistory: number[][];
+} {
+	let currentStats = [...initialStats];
+	const cycleRollHistory: number[][] = initialStats.map(() => []); // Initialize with empty arrays for each stat
 
-  for (let i = 0; i < 4; i++) { // 4 rolls per cycle
-    const rollValues = generateRoll(currentStats);
-    currentStats = updateStats(currentStats, rollValues);
-    rollValues.forEach((value, statIndex) => {
-      cycleRollHistory[statIndex].push(value);
-    });
-  }
+	for (let i = 0; i < 4; i++) {
+		// 4 rolls per cycle
+		const rollValues = generateRoll(currentStats);
+		currentStats = updateStats(currentStats, rollValues);
+		rollValues.forEach((value, statIndex) => {
+			cycleRollHistory[statIndex].push(value);
+		});
+	}
 
-  return { updatedStats: currentStats, cycleRollHistory };
+	return { updatedStats: currentStats, cycleRollHistory };
 }
 
 /**
@@ -111,8 +118,11 @@ export function simulateCycle(initialStats: StatsArray): { updatedStats: StatsAr
  * @param targetStats An array of target stat values.
  * @returns True if all targets are met, false otherwise.
  */
-export function checkTargetsMet(currentStats: StatsArray, targetStats: number[]): boolean {
-  return currentStats.every((stat, index) => stat.value >= targetStats[index]);
+export function checkTargetsMet(
+	currentStats: StatsArray,
+	targetStats: number[]
+): boolean {
+	return currentStats.every((stat, index) => stat.value >= targetStats[index]);
 }
 
 /**
@@ -124,24 +134,35 @@ export function checkTargetsMet(currentStats: StatsArray, targetStats: number[])
  * @param isStopped Function to check if the auto-reroll process should be stopped.
  */
 export async function autoReroll(
-  baseStatsWithIcons: StatsArray,
-  targetStats: number[],
-  onCycleComplete: (updatedStats: StatsArray, cycleRollHistory: number[][], attempts: number) => void,
-  onCompletion: (finalStats: StatsArray, finalAttempts: number) => void,
-  stopRef: React.MutableRefObject<boolean>
+	baseStatsWithIcons: StatsArray,
+	targetStats: number[],
+	onCycleComplete: (
+		updatedStats: StatsArray,
+		cycleRollHistory: number[][],
+		attempts: number
+	) => void,
+	onCompletion: (finalStats: StatsArray, finalAttempts: number) => void,
+	stopRef: React.MutableRefObject<boolean>
 ): Promise<void> {
-  let currentStatsResult: StatsArray = [...baseStatsWithIcons];
-  let attempts = 0;
+	let attempts = 0;
+	let lastStats: StatsArray = resetStats(baseStatsWithIcons);
 
-  while (stopRef.current && !checkTargetsMet(currentStatsResult, targetStats)) {
-    attempts++;
-    const { updatedStats, cycleRollHistory } = simulateCycle(currentStatsResult);
-    currentStatsResult = updatedStats;
-    onCycleComplete(currentStatsResult, cycleRollHistory, attempts);
+	while (stopRef.current) {
+		attempts++;
 
-    // Introduce a small delay to prevent blocking the UI
-    await new Promise(resolve => setTimeout(resolve, 50));
-  }
+		// Each attempt starts fresh
+		const { updatedStats, cycleRollHistory } = simulateCycle(
+			resetStats(baseStatsWithIcons)
+		);
+		lastStats = updatedStats;
 
-  onCompletion(currentStatsResult, attempts);
+		onCycleComplete(updatedStats, cycleRollHistory, attempts);
+
+		if (checkTargetsMet(updatedStats, targetStats)) break;
+
+		await new Promise((resolve) => setTimeout(resolve, 50));
+	}
+
+	// Return the actual last attempt stats instead of resetting
+	onCompletion(lastStats, attempts);
 }

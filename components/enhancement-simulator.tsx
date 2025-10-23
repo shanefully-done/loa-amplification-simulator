@@ -20,7 +20,6 @@ const EnhancementSimulator: React.FC = () => {
 		{ id: "stat5", name: "Luck", value: 0, icon: "🍀", color: "pink" },
 	];
 	const [stats, setStats] = useState<StatsArray>(initialStats);
-	const [rollHistory, setRollHistory] = useState<number[][]>([]);
 	const [attemptCounter, setAttemptCounter] = useState(0);
 	const [isAutoRerolling, setIsAutoRerolling] = useState(false);
 	const isAutoRerollingRef = useRef(false);
@@ -31,16 +30,13 @@ const EnhancementSimulator: React.FC = () => {
 
 	const handleEnhance = () => {
 		setStats(initialStats); // Reset to initial state before enhancing
-		setRollHistory([]); // Clear roll history for a fresh start
 		setAttemptCounter(0); // Reset attempt counter for manual enhance
-		const { updatedStats, cycleRollHistory } = simulateCycle(initialStats); // Use initialStats for the first roll
+		const { updatedStats } = simulateCycle(initialStats); // Use initialStats for the first roll
 		setStats(updatedStats);
-		setRollHistory(cycleRollHistory);
 	};
 
 	const handleReset = () => {
 		setStats(resetStats(initialStats)); // Reset to initial state
-		setRollHistory([]);
 		setAttemptCounter(0);
 	};
 
@@ -61,7 +57,6 @@ const EnhancementSimulator: React.FC = () => {
 			targetStats,
 			(updatedStats, cycleRollHistory, attempts) => {
 				setStats(updatedStats);
-				setRollHistory(cycleRollHistory);
 				setAttemptCounter(attempts);
 			},
 			(finalStats, finalAttempts) => {
@@ -84,16 +79,6 @@ const EnhancementSimulator: React.FC = () => {
 			<CardContent className="text-sm self-center">
 				<h3>Attempts: {attemptCounter}</h3>
 				<h3>Total Stats: {stats.reduce((sum, stat) => sum + stat.value, 0)}</h3>
-				{rollHistory.length > 0 && (
-					<div className="mt-2">
-						<h4>Last Roll History:</h4>
-						{rollHistory.map((roll, index) => (
-							<p key={index}>
-								Roll {index + 1}: {roll.join(", ")}
-							</p>
-						))}
-					</div>
-				)}
 			</CardContent>
 			<CardContent className="flex flex-col h-full p-0">
 				<div className="flex-grow flex justify-around items-end w-full">
