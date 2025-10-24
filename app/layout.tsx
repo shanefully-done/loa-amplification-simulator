@@ -24,13 +24,14 @@ export async function generateStaticParams() {
 	return languages.map((lng) => ({ lng }));
 }
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
-	params: { lng },
+	params,
 }: Readonly<{
 	children: React.ReactNode;
-	params: { lng: string };
+	params: Promise<{ lng: string }>;
 }>) {
+	const { lng } = await params;
 	return (
 		<html lang={lng ?? fallbackLng} suppressHydrationWarning>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
