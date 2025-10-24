@@ -11,7 +11,13 @@ import TargetSettingModal from "./target-setting-modal"; // Import the modal com
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const EnhancementSimulator: React.FC = () => {
+import { useTranslation } from "react-i18next";
+import { ModeToggle } from "./mode-toggle";
+import { LanguageToggle } from "./language-toggle";
+
+const EnhancementSimulator: React.FC<{ lng: string }> = ({ lng }) => {
+	const { t } = useTranslation("common", { lng });
+
 	const initialStats: StatsArray = [
 		{ id: "stat1", name: "Strength", value: 0, icon: "⚔️", color: "rose" },
 		{ id: "stat2", name: "Defense", value: 0, icon: "🛡️", color: "fuchsia" },
@@ -72,13 +78,24 @@ const EnhancementSimulator: React.FC = () => {
 	return (
 		<Card className="bg-background w-full max-w-full md:w-[800px] md:h-[500px] aspect-video mx-auto md:bg-card/70 md:border md:border-primary md:rounded-xl md:shadow-lg p-5 flex flex-col gap-5">
 			<CardHeader className="p-0">
-				<CardTitle className="text-center text-primary font-bold text-2xl">
-					Amplification
-				</CardTitle>
+				<div className="flex items-center">
+					<div className="flex-1"></div>
+					<CardTitle className="text-primary font-bold text-2xl">
+						{t("amplification")}
+					</CardTitle>
+					<div className="flex-1 flex justify-end gap-2">
+						<ModeToggle />
+						<LanguageToggle />
+					</div>
+				</div>
 			</CardHeader>
 			<CardContent className="text-sm self-center mb-16 md:mb-0">
-				<h3>Attempts: {attemptCounter}</h3>
-				<h3>Total Stats: {stats.reduce((sum, stat) => sum + stat.value, 0)}</h3>
+				<h3>
+					{t("attempts")}: {attemptCounter}
+				</h3>
+				<h3>
+					{t("totalStats")}: {stats.reduce((sum, stat) => sum + stat.value, 0)}
+				</h3>
 			</CardContent>
 			<CardContent className="flex flex-col h-full p-0">
 				<div className="flex-grow flex justify-around items-end w-full">
@@ -112,23 +129,23 @@ const EnhancementSimulator: React.FC = () => {
 				<div className="flex self-center mt-4">
 					<div className="flex flex-col space-y-2 md:flex-row md:space-x-4 md:space-y-0">
 						<Button onClick={handleEnhance} className="enhancement-button">
-							Amplify
+							{t("amplify")}
 						</Button>
 						<Button onClick={handleReset} className="enhancement-button">
-							Reset
+							{t("reset")}
 						</Button>
 						<Button
 							onClick={handleAutoReroll}
 							disabled={!isAutoRerollEnabled}
 							className="enhancement-button"
 						>
-							{isAutoRerolling ? "Stop Auto Reroll" : "Auto Reroll"}
+							{isAutoRerolling ? t("stopAutoReroll") : t("autoReroll")}
 						</Button>
 						<Button
 							onClick={() => setIsTargetModalOpen(true)}
 							className="enhancement-button"
 						>
-							Auto Reroll Config
+							{t("autoRerollConfig")}
 						</Button>
 					</div>
 				</div>
@@ -140,6 +157,7 @@ const EnhancementSimulator: React.FC = () => {
 						setIsTargetModalOpen(false);
 					}}
 					initialTargetStats={targetStats}
+					lng={lng}
 				/>
 			</CardContent>
 		</Card>

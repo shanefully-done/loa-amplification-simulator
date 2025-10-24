@@ -1,0 +1,20 @@
+{
+	"amplification": "Amplification",
+	"attempts": "Attempts",
+	"totalStats": "Total Stats",
+	"amplify": "Amplify",
+	"reset": "Reset",
+	"stopAutoReroll": "Stop Auto Reroll",
+	"autoReroll": "Auto Reroll",
+	"autoRerollConfig": "Auto Reroll Config",
+	"light": "Light",
+	"dark": "Dark",
+	"system": "System",
+	"toggle_theme": "Toggle theme",
+	"toggle_language": "Toggle language",
+	"setTargetStatsTitle": "Set Target Stats",
+	"setTargetStatsDescription": "Set the minimum desired value for each stat (0-10).",
+	"statLabel": "Stat",
+	"cancelButton": "Cancel",
+	"saveChangesButton": "Save changes"
+}
