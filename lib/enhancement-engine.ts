@@ -11,7 +11,7 @@ const probabilityTable: Record<number, number[]> = {
 	7: [0.419, 0.3333, 0.1869, 0.0935, 0.0467, 0],
 	8: [0.49, 0.34, 0.17, 0, 0, 0],
 	9: [0.7538, 0.17, 0, 0, 0, 0],
-	10: [0, 0, 0, 0, 0, 0], // for stat value 10
+	10: [1, 0, 0, 0, 0, 0], // for stat value 10
 };
 
 /**
@@ -19,14 +19,8 @@ const probabilityTable: Record<number, number[]> = {
  * @param statValue The current value of the stat.
  * @returns The nearest tier (0, 5, or 10).
  */
-function getNearestStatTier(statValue: number): 0 | 5 | 10 {
-	if (statValue <= 2.5) {
-		return 0;
-	} else if (statValue <= 7.5) {
-		return 5;
-	} else {
-		return 10;
-	}
+function getNearestStatTier(statValue: number): number {
+	return Math.min(10, Math.max(0, Math.floor(statValue)));
 }
 
 /**
