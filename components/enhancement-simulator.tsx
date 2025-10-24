@@ -10,12 +10,13 @@ import { StatsArray } from "../lib/types";
 import TargetSettingModal from "./target-setting-modal"; // Import the modal component
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
+import { useTranslation } from "react-i18next";
 import { ModeToggle } from "./mode-toggle";
 import { LanguageToggle } from "./language-toggle";
-import { useTranslation } from "react-i18next";
 
 const EnhancementSimulator: React.FC<{ lng: string }> = ({ lng }) => {
-	const { t } = useTranslation("common");
+	const { t } = useTranslation("common", { lng });
 
 	const initialStats: StatsArray = [
 		{ id: "stat1", name: "Strength", value: 0, icon: "⚔️", color: "rose" },
@@ -76,15 +77,16 @@ const EnhancementSimulator: React.FC<{ lng: string }> = ({ lng }) => {
 
 	return (
 		<Card className="bg-background w-full max-w-full md:w-[800px] md:h-[500px] aspect-video mx-auto md:bg-card/70 md:border md:border-primary md:rounded-xl md:shadow-lg p-5 flex flex-col gap-5">
-			<CardHeader className="p-0 flex flex-row items-center justify-between">
-				<div className="flex-grow text-center">
+			<CardHeader className="p-0">
+				<div className="flex items-center">
+					<div className="flex-1"></div>
 					<CardTitle className="text-primary font-bold text-2xl">
 						{t("amplification")}
 					</CardTitle>
-				</div>
-				<div className="flex gap-2">
-					<ModeToggle />
-					<LanguageToggle lng={lng} />
+					<div className="flex-1 flex justify-end gap-2">
+						<ModeToggle />
+						<LanguageToggle />
+					</div>
 				</div>
 			</CardHeader>
 			<CardContent className="text-sm self-center mb-16 md:mb-0">
@@ -155,6 +157,7 @@ const EnhancementSimulator: React.FC<{ lng: string }> = ({ lng }) => {
 						setIsTargetModalOpen(false);
 					}}
 					initialTargetStats={targetStats}
+					lng={lng}
 				/>
 			</CardContent>
 		</Card>

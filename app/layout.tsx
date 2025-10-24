@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { languages } from "@/lib/i18n.settings";
-import { I18nProvider } from "@/components/i18n-provider";
+import TranslationsProvider from "@/components/i18n-provider";
+import { fallbackLng, languages } from "@/lib/i18n.settings";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -15,14 +15,14 @@ const geistMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
-export async function generateStaticParams() {
-	return languages.map((lng) => ({ lng }));
-}
-
 export const metadata: Metadata = {
 	title: "LOA Kit",
 	description: "Tools for LOA by IxTJ",
 };
+
+export async function generateStaticParams() {
+	return languages.map((lng) => ({ lng }));
+}
 
 export default function RootLayout({
 	children,
@@ -32,18 +32,18 @@ export default function RootLayout({
 	params: { lng: string };
 }>) {
 	return (
-		<html lang={lng}>
+		<html lang={lng ?? fallbackLng} suppressHydrationWarning>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				<I18nProvider lng={lng} ns="common">
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						enableSystem
-						disableTransitionOnChange
-					>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<TranslationsProvider namespaces={["common"]} locale={lng}>
 						{children}
-					</ThemeProvider>
-				</I18nProvider>
+					</TranslationsProvider>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
