@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { languages } from "@/lib/i18n.settings";
+import { I18nProvider } from "@/components/i18n-provider";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -12,6 +15,10 @@ const geistMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
+export async function generateStaticParams() {
+	return languages.map((lng) => ({ lng }));
+}
+
 export const metadata: Metadata = {
 	title: "LOA Kit",
 	description: "Tools for LOA by IxTJ",
@@ -19,13 +26,24 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
+	params: { lng },
 }: Readonly<{
 	children: React.ReactNode;
+	params: { lng: string };
 }>) {
 	return (
-		<html lang="en">
+		<html lang={lng}>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				{children}
+				<I18nProvider lng={lng} ns="common">
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						{children}
+					</ThemeProvider>
+				</I18nProvider>
 			</body>
 		</html>
 	);
